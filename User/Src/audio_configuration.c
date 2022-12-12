@@ -31,7 +31,7 @@
 
 
 
-static uint8_t AudioConfiguration = 0xFF;//0;
+static uint8_t AudioConfiguration = 0; // was 0xFF
 static uint8_t VolumeFeature = 0;
 static uint8_t SyncMode = 0;
 static uint8_t SAICountUsed = 2;
@@ -51,10 +51,6 @@ void SetAudioConfigDependedFuncs(AUDIO_SpeakerNode_t *speaker)
 {
   switch(AudioConfiguration)
   {
-    default:
-      speaker->SpeakerPlay = Play_SAIMaster;
-      speaker->SpeakerPrepareData = 0;
-    break;
     
     case AUDIO_CONFIG_2_0_SPDIF:
       speaker->SpeakerPlay = Play_SAIMaster;
@@ -66,6 +62,11 @@ void SetAudioConfigDependedFuncs(AUDIO_SpeakerNode_t *speaker)
     case AUDIO_CONFIG_7_1:
       speaker->SpeakerPlay = Play_SAIMasterAndSlave;
       speaker->SpeakerPrepareData = PrepareMultiChannelData;
+    break;
+  
+    default:
+      speaker->SpeakerPlay = Play_SAIMaster;
+      speaker->SpeakerPrepareData = 0;
     break;
   }
 }
@@ -350,6 +351,7 @@ void AudioConfig_Init(void)
   Settings.TdmLrMode = TDM_LR_PULSE;
   Settings.Format = SAI_I2S;
   
+  // why would we need to read CONFIG_GPIO->IDR
   AudioConfiguration = CONFIG_GPIO->IDR & AUDIO_CONFIG_MASK;
       
   switch(AudioConfiguration)
