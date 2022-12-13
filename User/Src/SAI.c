@@ -165,17 +165,17 @@ void SAI_MasterInit(uint8_t AudioResolution, uint8_t ChnlCount)
   
   switch(SAISets.Format)
   {
-    case SAI_I2S:
-    default:
-      SAI_Init_I2S(SAI_MASTER, AudioResolution);
-    break;
-    
     case SAI_TDM:
       SAI_Init_TDM(SAI_MASTER, AudioResolution, ChnlCount);
     break;
     
     case SAI_SPDIF:
       SAI_MASTER->CR1 = SAI_xCR1_PRTCFG_0;
+    break;
+    
+    case SAI_I2S:
+    default:
+      SAI_Init_I2S(SAI_MASTER, AudioResolution);
     break;
   }  
 }
@@ -318,8 +318,8 @@ void SAI_DMAInit(DMA_Stream_TypeDef *DMAStream, uint8_t AudioResolution)
 //------------------------------------------------------------------------------
 void SAI_DMAChangeDataSize(DMA_Stream_TypeDef *DMAStream, uint8_t Resolution)
 { 
-  //SAI_DMAChangeDataSize вызывается в прерывании по окончанию передачи (TC)
-  //поток уже неактивен, поэтому можно изменять регистр CR.
+  //SAI_DMAChangeDataSize пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (TC)
+  //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ CR.
     
   DMAStream->CR &= ~(DMA_SxCR_MSIZE_Msk | DMA_SxCR_PSIZE_Msk);
   

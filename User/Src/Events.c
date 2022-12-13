@@ -44,13 +44,6 @@ void Event_FreqChanged(uint32_t AudioFrequency)
       FREQ_EVENT_GPIO->ODR &= ~FREQ_EVENT_MASK;
     break;
       
-    case USB_AUDIO_CONFIG_FREQ_48_K:
-    default:
-      FREQ_EVENT_3_GPIO->ODR &= ~FREQ_EVENT_3_PIN_MASK;
-      FREQ_EVENT_GPIO->ODR |= FREQ_EVENT_1_PIN_MASK;
-      FREQ_EVENT_GPIO->ODR &= ~FREQ_EVENT_2_PIN_MASK;
-    break;
-    
     case USB_AUDIO_CONFIG_FREQ_88_2_K:
       FREQ_EVENT_3_GPIO->ODR |= FREQ_EVENT_3_PIN_MASK;
       FREQ_EVENT_GPIO->ODR &= ~FREQ_EVENT_1_PIN_MASK;
@@ -71,6 +64,13 @@ void Event_FreqChanged(uint32_t AudioFrequency)
     case USB_AUDIO_CONFIG_FREQ_192_K:
       FREQ_EVENT_3_GPIO->ODR &= ~FREQ_EVENT_3_PIN_MASK;
       FREQ_EVENT_GPIO->ODR |= FREQ_EVENT_MASK;
+    break;
+    
+    case USB_AUDIO_CONFIG_FREQ_48_K:
+    default:
+      FREQ_EVENT_3_GPIO->ODR &= ~FREQ_EVENT_3_PIN_MASK;
+      FREQ_EVENT_GPIO->ODR |= FREQ_EVENT_1_PIN_MASK;
+      FREQ_EVENT_GPIO->ODR &= ~FREQ_EVENT_2_PIN_MASK;
     break;
   }
 }

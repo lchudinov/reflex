@@ -2915,11 +2915,6 @@ uint16_t USB_AUDIO_GetConfigDescriptor(uint8_t **desc)
           *desc = (uint8_t *)USBD_AUDIO_Config_2_0_Stereo_32_bit;
         break;
         
-        case AUDIO_CONFIG_2_0_STEREO:
-        default:
-          *desc = (uint8_t *)USBD_AUDIO_Config_2_0_Stereo;
-        break;
-      
         case AUDIO_CONFIG_3_1:
           *desc = (uint8_t *)USBD_AUDIO_Config_3_1;
         break;
@@ -2934,7 +2929,12 @@ uint16_t USB_AUDIO_GetConfigDescriptor(uint8_t **desc)
         
         case AUDIO_CONFIG_2_0_SPDIF:
           *desc = (uint8_t *)USBD_AUDIO_Config_2_0_SPDIF;
-        break;        
+        break;   
+        
+        case AUDIO_CONFIG_2_0_STEREO:
+        default:
+          *desc = (uint8_t *)USBD_AUDIO_Config_2_0_Stereo;
+        break;     
       }
     }
     else
@@ -2945,11 +2945,6 @@ uint16_t USB_AUDIO_GetConfigDescriptor(uint8_t **desc)
           *desc = (uint8_t *)USBD_AUDIO_Config_2_0_Stereo_32_bit_HWV;
         break;
         
-        case AUDIO_CONFIG_2_0_STEREO:
-        default:
-          *desc = (uint8_t *)USBD_AUDIO_Config_2_0_Stereo_HWV;
-        break;
-      
         case AUDIO_CONFIG_3_1:
           *desc = (uint8_t *)USBD_AUDIO_Config_3_1_HWV;
         break;
@@ -2964,6 +2959,11 @@ uint16_t USB_AUDIO_GetConfigDescriptor(uint8_t **desc)
         
         case AUDIO_CONFIG_2_0_SPDIF:
           *desc = (uint8_t *)USBD_AUDIO_Config_2_0_SPDIF_HWV;
+        break;
+
+        case AUDIO_CONFIG_2_0_STEREO:
+        default:
+          *desc = (uint8_t *)USBD_AUDIO_Config_2_0_Stereo_HWV;
         break;
       }
     }

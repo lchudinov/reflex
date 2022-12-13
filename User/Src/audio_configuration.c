@@ -269,13 +269,6 @@ void PlayDescriptionInit(AUDIO_Description_t *Description)
   
   switch(AudioConf)
   {
-    case AUDIO_CONFIG_2_0_STEREO_32_BIT:
-    case AUDIO_CONFIG_2_0_STEREO:
-    default:
-      Description->channels_count = CONFIG_2_0_STEREO_CHANNEL_COUNT;
-      Description->channels_map = CONFIG_2_0_STEREO_CHANNEL_MAP;
-    break;
-    
     case AUDIO_CONFIG_3_1:
       Description->channels_count = CONFIG_3_1_CHANNEL_COUNT;
       Description->channels_map = CONFIG_3_1_CHANNEL_MAP;
@@ -289,6 +282,13 @@ void PlayDescriptionInit(AUDIO_Description_t *Description)
     case AUDIO_CONFIG_7_1:
       Description->channels_count = CONFIG_7_1_SURROUND_CHANNEL_COUNT;
       Description->channels_map = CONFIG_7_1_SURROUND_CHANNEL_MAP;
+    break;
+    
+    case AUDIO_CONFIG_2_0_STEREO_32_BIT:
+    case AUDIO_CONFIG_2_0_STEREO:
+    default:
+      Description->channels_count = CONFIG_2_0_STEREO_CHANNEL_COUNT;
+      Description->channels_map = CONFIG_2_0_STEREO_CHANNEL_MAP;
     break;
   }
     
@@ -362,13 +362,6 @@ void AudioConfig_Init(void)
       ChannelsPairs = 1;
     break;
    
-    case AUDIO_CONFIG_MASK:
-    default:
-      AudioConfiguration = AUDIO_CONFIG_2_0_STEREO;
-      SAICountUsed = 1;
-      ChannelsPairs = 1;
-    break;
-    
     case (AUDIO_CONFIG_2_MASK | AUDIO_CONFIG_3_MASK):
       AudioConfiguration = AUDIO_CONFIG_3_1;
       ChannelsPairs = 2;
@@ -389,6 +382,13 @@ void AudioConfig_Init(void)
       SAICountUsed = 1;
       ChannelsPairs = 1;
       Settings.Format = SAI_SPDIF;
+    break;
+    
+    case AUDIO_CONFIG_MASK:
+    default:
+      AudioConfiguration = AUDIO_CONFIG_2_0_STEREO;
+      SAICountUsed = 1;
+      ChannelsPairs = 1;
     break;    
   }
   
@@ -406,10 +406,6 @@ void AudioConfig_Init(void)
   uint16_t SyncConfig = CONFIG_GPIO->IDR & SYNC_MODE_MASK;
   switch (SyncConfig)
   {
-    case SYNC_MODE_MASK:
-    default:
-      SyncMode = MASTER_INT_SYNC;
-    break;
     
     case SYNC_MODE_2_MASK:
       SyncMode = MASTER_EXT_SYNC;
@@ -417,6 +413,11 @@ void AudioConfig_Init(void)
     
     case SYNC_MODE_1_MASK:
       SyncMode = SLAVE_SYNC;
+    break;
+
+    case SYNC_MODE_MASK:
+    default:
+      SyncMode = MASTER_INT_SYNC;
     break;
   }
   
