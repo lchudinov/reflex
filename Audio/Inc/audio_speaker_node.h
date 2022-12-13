@@ -39,10 +39,10 @@
    
 /* Exported constants --------------------------------------------------------*/
 /*   VOLUME_SPEAKER_RES_DB_256 is the resolution of volume change, see the UAC specification for more details */
-#define VOLUME_SPEAKER_RES_DB_256       128//1//     // 0.5 db 0.5 * 256 = 256
-#define VOLUME_SPEAKER_DEFAULT_DB_256   0       // 0 db
-#define VOLUME_SPEAKER_MAX_DB_256       0//1536    // 6db == 6*256 = 1536
-#define VOLUME_SPEAKER_MIN_DB_256       -7680//-6400   // -25db == -25*256 = -6400
+#define VOLUME_SPEAKER_RES_DB_256       128     /* 0.5 db 0.5 * 256 = 256*/ 
+#define VOLUME_SPEAKER_DEFAULT_DB_256   0       /* 0 db*/ 
+#define VOLUME_SPEAKER_MAX_DB_256       1536    /* 6db == 6*256 = 1536*/
+#define VOLUME_SPEAKER_MIN_DB_256       -6400   /* -25db == -25*256 = -6400*/
 #if USE_AUDIO_TIMER_VOLUME_CTRL 
 /*  SPEAKER_CMD_CHANGE_VOLUM signals to the Timer's interrupt which responsible of volume change that a volume value change is required */
 #define SPEAKER_CMD_CHANGE_VOLUME  0x10

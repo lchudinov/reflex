@@ -1,21 +1,9 @@
 /*
 ********************************************************************************
-* This file is a part of firmware for Reflex module
-* (USB_I2S_PRIME_SUPER modification)
-*
-* Copyright (c) 2020 ChipDip. <https://www.chipdip.ru>
+* COPYRIGHT(c) ЗАО «ЧИП и ДИП», 2020
 * 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License. 
+* Программное обеспечение предоставляется на условиях «как есть» (as is).
+* При распространении указание автора обязательно.
 ********************************************************************************
 */
 
@@ -80,6 +68,39 @@
 #define   AUDIO_NAME_OFFSET                (AUDIO_NAME_SIZE_OFFSET + AUDIO_NAME_SIZE_SIZE)
 #define   AUDIO_NAME_SIZE                  USB_DEVICE_NAME_MAX_LENGTH
 #define   AUDIO_NAME_MAP_SIZE              (AUDIO_NAME_SIZE_SIZE + AUDIO_NAME_SIZE)
+
+
+
+
+//DSP_BOOT_CONFIGURATION
+#define   DSP_ID_OFFSET                    0
+#define   DSP_ID_SIZE                      ID_SIZE
+#define   DSP_BUS_ADR_OFFSET               (DSP_ID_OFFSET + DSP_ID_SIZE)
+#define   DSP_BUS_ADR_SIZE                 1
+#define   DSP_CS_GPIO_NUM_OFFSET           (DSP_BUS_ADR_OFFSET + DSP_BUS_ADR_SIZE)
+#define   DSP_CS_GPIO_NUM_SIZE             1
+#define   DSP_INTERFACE_TYPE_OFFSET        (DSP_CS_GPIO_NUM_OFFSET + DSP_CS_GPIO_NUM_SIZE)
+#define   DSP_INTERFACE_TYPE_SIZE          1
+#define   DSP_INTERFACE_NUM_OFFSET         (DSP_INTERFACE_TYPE_OFFSET + DSP_INTERFACE_TYPE_SIZE)
+#define   DSP_INTERFACE_NUM_SIZE           1
+#define   DSP_OPERATIONS_COUNT_OFFSET      (DSP_INTERFACE_NUM_OFFSET + DSP_INTERFACE_NUM_SIZE)
+#define   DSP_OPERATIONS_COUNT_SIZE        2
+#define   DSP_FIRST_OPER_DESC_OFFSET       (DSP_OPERATIONS_COUNT_OFFSET + DSP_OPERATIONS_COUNT_SIZE)
+#define   DSP_DESCRIPTOR_SIZE              DSP_OPERATIONS_COUNT_OFFSET
+
+//DSP_OPERATION_DESCRIPTOR
+#define   DSP_OPER_ID_OFFSET               0
+#define   DSP_OPER_ID_SIZE                 ID_SIZE
+#define   DSP_OPER_ADR_OFFSET              (DSP_OPER_ID_OFFSET + DSP_OPER_ID_SIZE)
+#define   DSP_OPER_ADR_SIZE                ADDRESS_IN_DSP_SIZE
+#define   DSP_OPER_ADR_INCR_OFFSET         (DSP_OPER_ADR_OFFSET + DSP_OPER_ADR_SIZE)
+#define   DSP_OPER_ADR_INCR_SIZE           1
+#define   DSP_OPER_DATA_SIZE_OFFSET        (DSP_OPER_ADR_INCR_OFFSET + DSP_OPER_ADR_INCR_SIZE)
+#define   DSP_OPER_DATA_SIZE_SIZE          2
+#define   DSP_OPER_DATA_OFFSET             (DSP_OPER_DATA_SIZE_OFFSET + DSP_OPER_DATA_SIZE_SIZE)
+
+
+
 
 
 

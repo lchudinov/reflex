@@ -77,8 +77,8 @@
 #define USB_AUDIO_CONFIG_PLAY_FREQ_MIN   USB_AUDIO_CONFIG_FREQ_192_K
 #endif 
 /* Macro to compute the count of supported frequency */
-#define USB_AUDIO_CONFIG_PLAY_FREQ_COUNT              (USB_AUDIO_CONFIG_PLAY_USE_FREQ_192_K + USB_AUDIO_CONFIG_PLAY_USE_FREQ_176_4_K + USB_AUDIO_CONFIG_PLAY_USE_FREQ_96_K +\
-                                                       USB_AUDIO_CONFIG_PLAY_USE_FREQ_88_2_K + USB_AUDIO_CONFIG_PLAY_USE_FREQ_48_K + USB_AUDIO_CONFIG_PLAY_USE_FREQ_44_1_K +\
+#define USB_AUDIO_CONFIG_PLAY_FREQ_COUNT              (USB_AUDIO_CONFIG_PLAY_USE_FREQ_192_K + USB_AUDIO_CONFIG_PLAY_USE_FREQ_96_K +\
+                                                       USB_AUDIO_CONFIG_PLAY_USE_FREQ_48_K + USB_AUDIO_CONFIG_PLAY_USE_FREQ_44_1_K +\
                                                         USB_AUDIO_CONFIG_PLAY_USE_FREQ_32_K + USB_AUDIO_CONFIG_PLAY_USE_FREQ_16_K +\
                                                           USB_AUDIO_CONFIG_PLAY_USE_FREQ_8_K)
 #define USB_AUDIO_CONFIG_PLAY_DEF_FREQ                USB_AUDIO_CONFIG_PLAY_FREQ_MAX

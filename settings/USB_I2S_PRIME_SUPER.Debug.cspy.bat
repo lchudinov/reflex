@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"F:\WorkPrograms\EWARM 8.2\common\bin\cspybat" -f "F:\ArmProjects\REFLEX\REFLEX_v1.6\settings\USB_I2S_PRIME_SUPER.Debug.general.xcl" --backend -f "F:\ArmProjects\REFLEX\REFLEX_v1.6\settings\USB_I2S_PRIME_SUPER.Debug.driver.xcl" 
+"F:\WorkPrograms\EWARM 8.2\common\bin\cspybat" -f "F:\ArmProjects\REFLEX\REFLEX_v1.2\settings\USB_I2S_PRIME_SUPER.Debug.general.xcl" --backend -f "F:\ArmProjects\REFLEX\REFLEX_v1.2\settings\USB_I2S_PRIME_SUPER.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"F:\WorkPrograms\EWARM 8.2\common\bin\cspybat" -f "F:\ArmProjects\REFLEX\REFLEX_v1.6\settings\USB_I2S_PRIME_SUPER.Debug.general.xcl" "--debug_file=%~1" --backend -f "F:\ArmProjects\REFLEX\REFLEX_v1.6\settings\USB_I2S_PRIME_SUPER.Debug.driver.xcl" 
+"F:\WorkPrograms\EWARM 8.2\common\bin\cspybat" -f "F:\ArmProjects\REFLEX\REFLEX_v1.2\settings\USB_I2S_PRIME_SUPER.Debug.general.xcl" "--debug_file=%~1" --backend -f "F:\ArmProjects\REFLEX\REFLEX_v1.2\settings\USB_I2S_PRIME_SUPER.Debug.driver.xcl" 
 
 @echo off 
 :end

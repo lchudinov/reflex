@@ -39,7 +39,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>1103650974</Checksum>
+        <Checksum>2161709791</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -49,8 +49,8 @@
         <Enabled>_ 0</Enabled>
     </CodeCoverage>
     <Disassembly>
-        <InstrCount>0</InstrCount>
         <MixedMode>1</MixedMode>
+        <InstrCount>0</InstrCount>
     </Disassembly>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -73,11 +73,6 @@
         <ITMportsLogFile>0</ITMportsLogFile>
         <ITMlogFile>$PROJ_DIR$\ITM.log</ITMlogFile>
     </SWOTraceHWSettings>
-    <struct_types>
-        <Fmt0>SAISettings-BclkFsRatio	3	0</Fmt0>
-        <Fmt1>SAISettings-BclkPol	3	0</Fmt1>
-        <Fmt2>SAISettings-TdmLrMode	3	0</Fmt2>
-    </struct_types>
     <array_types>
         <Fmt0>uint16_t[1024]	4	0</Fmt0>
         <Fmt1>uint16_t[96]	4	0</Fmt1>
@@ -87,24 +82,19 @@
         <Fmt5>uint8_t[192]	4	0</Fmt5>
         <Fmt6>uint8_t[32]	3	0</Fmt6>
         <Fmt7>uint8_t[384]	4	0</Fmt7>
-        <Fmt8>uint8_t[40]	4	0</Fmt8>
-        <Fmt9>uint8_t[576]	4	0</Fmt9>
-        <Fmt10>uint8_t[64]	4	0</Fmt10>
-        <Fmt11>uint8_t[768]	3	0</Fmt11>
+        <Fmt8>uint8_t[576]	4	0</Fmt8>
+        <Fmt9>uint8_t[64]	4	0</Fmt9>
+        <Fmt10>uint8_t[768]	3	0</Fmt10>
     </array_types>
     <watch_formats>
         <Fmt0>{W}1:AudioConfiguration	3	0</Fmt0>
         <Fmt1>{W}1:Buffer[0]	4	0</Fmt1>
         <Fmt2>{W}1:Buffer[1]	4	0</Fmt2>
         <Fmt3>{W}1:BytesPerSAI	3	0</Fmt3>
-        <Fmt4>{W}1:ChnlCount	3	0</Fmt4>
-        <Fmt5>{W}1:DataIncrement	3	0</Fmt5>
-        <Fmt6>{W}1:NewMCKDIV	4	0</Fmt6>
-        <Fmt7>{W}1:NullCharIndex	3	0</Fmt7>
-        <Fmt8>{W}1:SlotMask	1	0</Fmt8>
-        <Fmt9>{W}1:StringSize	3	0</Fmt9>
-        <Fmt10>{W}1:ValPercent	3	0</Fmt10>
-        <Fmt11>{W}1:j	3	0</Fmt11>
+        <Fmt4>{W}1:DataIncrement	3	0</Fmt4>
+        <Fmt5>{W}1:NewMCKDIV	4	0</Fmt5>
+        <Fmt6>{W}1:StringSize	3	0</Fmt6>
+        <Fmt7>{W}1:j	3	0</Fmt7>
     </watch_formats>
     <Trace2>
         <Enabled>0</Enabled>

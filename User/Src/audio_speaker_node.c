@@ -41,7 +41,6 @@
 #include "audio_configuration.h"
 #include "usb_audio.h"
 #include "board.h"
-#include "DAC.h"
 
 
 /* Private defines -----------------------------------------------------------*/
@@ -172,7 +171,7 @@ static  int AUDIO_SpeakerDebugStats_count =0;
                        speaker->node.audio_description->resolution);
   //BSP_AUDIO_OUT_Play((uint16_t *)speaker->specific.data ,speaker->specific.data_size );
   
-  
+  //начиная с версии 1.6
   //если USB-устройство инициализировано - программный сброс
   //нужно для корректного функционирования при перезагрузке ОС
   //и при включении ПК
@@ -228,8 +227,6 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack(void)
 
      AUDIO_SpeakerInitInjectionsParams(AUDIO_SpeakerHandler);
      
-     AUDIO_SpeakerHandler->injection_44_count = 0;
-     
      AudioChangeFrequency(AUDIO_SpeakerHandler->node.audio_description->frequency);
      //BSP_AUDIO_OUT_SetFrequency(AUDIO_SpeakerHandler->node.audio_description->frequency);
 
@@ -279,16 +276,9 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack(void)
       AUDIO_SpeakerHandler->specific.data_size = AUDIO_SpeakerHandler->specific.injection_size;
       read_length = AUDIO_SpeakerHandler->packet_length;
 #if USB_AUDIO_CONFIG_PLAY_USE_FREQ_44_1_K
-      if((AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_44_1_K)
-      || (AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_88_2_K)
-      || (AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_176_4_K))
+      if(AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_44_1_K)
       {
-        if(((AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_44_1_K)
-                                                    && (AUDIO_SpeakerHandler->injection_44_count < 9))
-        || ((AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_88_2_K)
-                                                    && (AUDIO_SpeakerHandler->injection_44_count < 4))
-        || ((AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_176_4_K)
-                                                    && (AUDIO_SpeakerHandler->injection_44_count < 4)))
+        if(AUDIO_SpeakerHandler->injection_44_count < 9)
         {
           AUDIO_SpeakerHandler->injection_44_count++;  
         }
@@ -320,9 +310,7 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack(void)
         {
           AUDIO_SpeakerHandler->specific.data = AUDIO_SpeakerHandler->buf->data + AUDIO_SpeakerHandler->buf->rd_ptr;
 #if USB_AUDIO_CONFIG_PLAY_USE_FREQ_44_1_K        
-        if((AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_44_1_K)
-        || (AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_88_2_K)
-        || (AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_176_4_K))
+        if(AUDIO_SpeakerHandler->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_44_1_K)
         {
           uint16_t d = AUDIO_SpeakerHandler->buf->size - AUDIO_SpeakerHandler->buf->rd_ptr;
           if(d < AUDIO_SpeakerHandler->specific.data_size)
@@ -439,21 +427,12 @@ static void  AUDIO_SpeakerInitInjectionsParams( AUDIO_SpeakerNode_t* speaker)
   }
 //#endif /* USB_AUDIO_CONFIG_PLAY_RES_BIT == 24*/ 
 #if USB_AUDIO_CONFIG_PLAY_USE_FREQ_44_1_K
-  if((speaker->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_44_1_K)
-  || (speaker->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_88_2_K)
-  || (speaker->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_176_4_K))
+  if(speaker->node.audio_description->frequency == USB_AUDIO_CONFIG_FREQ_44_1_K)
   {
     speaker->specific.double_buff = 1;
-    if (speaker->node.audio_description->frequency != USB_AUDIO_CONFIG_FREQ_176_4_K)
-      speaker->packet_length_max_44_1 = speaker->packet_length + AUDIO_SAMPLE_LENGTH(speaker->node.audio_description);
-    else
-      speaker->packet_length_max_44_1 = 712;
-      
+    speaker->packet_length_max_44_1 = speaker->packet_length + AUDIO_SAMPLE_LENGTH(speaker->node.audio_description);
     //speaker->specific.alt_buf_half_size = AUDIO_SPEAKER_MAX_INJECTION_LENGTH(speaker->node.audio_description);
-    if (speaker->node.audio_description->frequency != USB_AUDIO_CONFIG_FREQ_176_4_K)
-      speaker->specific.alt_buf_half_size = speaker->specific.injection_size + ((speaker->node.audio_description)->resolution*(speaker->node.audio_description)->channels_count);
-    else
-      speaker->specific.alt_buf_half_size = 712;
+    speaker->specific.alt_buf_half_size = speaker->specific.injection_size + ((speaker->node.audio_description)->resolution*(speaker->node.audio_description)->channels_count);
     
     if (speaker->node.audio_description->resolution == CONFIG_RES_BYTE_24)
       speaker->specific.alt_buf_half_size = speaker->specific.injection_size + (4*(speaker->node.audio_description)->channels_count);
@@ -490,7 +469,6 @@ static int8_t  AUDIO_SpeakerMute( uint16_t channel_number,  uint8_t mute , uint3
   */ 
 static int8_t  AUDIO_SpeakerSetVolume( uint16_t channel_number,  int volume_db_256 ,  uint32_t node_handle)
 {
-  DAC_SetValuePercent(VOLUME_DB_256_TO_PERCENT(volume_db_256));
   
   return 0;
 }      

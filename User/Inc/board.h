@@ -1,21 +1,9 @@
 /*
 ********************************************************************************
-* This file is a part of firmware for Reflex module
-* (USB_I2S_PRIME_SUPER modification)
-*
-* Copyright (c) 2019 - 2021 ChipDip. <https://www.chipdip.ru>
+* COPYRIGHT(c) ЗАО «ЧИП и ДИП», 2019, 2020
 * 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License. 
+* Программное обеспечение предоставляется на условиях «как есть» (as is).
+* При распространении указание автора обязательно.
 ********************************************************************************
 */
 
@@ -80,23 +68,16 @@
 #define   FREQ_EVENT_GPIO                  GPIOB
 #define   FREQ_EVENT_1_PIN                 0 //pcb marking 26
 #define   FREQ_EVENT_2_PIN                 1 //pcb marking 25
-#define   FREQ_EVENT_3_GPIO                GPIOC
-#define   FREQ_EVENT_3_PIN                 5 //pcb marking 27
 #define   FREQ_EVENT_MASK                  ((1 << FREQ_EVENT_1_PIN) | (1 << FREQ_EVENT_2_PIN))
-#define   FREQ_EVENT_1_PIN_MASK            (1 << FREQ_EVENT_1_PIN)
-#define   FREQ_EVENT_2_PIN_MASK            (1 << FREQ_EVENT_2_PIN)
-#define   FREQ_EVENT_3_PIN_MASK            (1 << FREQ_EVENT_3_PIN)
+#define   FREQ_EVENT_44100                 0
+#define   FREQ_EVENT_48000                 (1 << FREQ_EVENT_1_PIN)
 #define   FREQ_EVENT_96000                 (1 << FREQ_EVENT_2_PIN)
 #define   FREQ_EVENT_192000                FREQ_EVENT_MASK
 
-#define   RES_EVENT_1_GPIO                 GPIOC
-#define   RES_EVENT_1_PIN                  11 //pcb marking 23
-#define   RES_EVENT_1_PIN_MASK             (1 << RES_EVENT_1_PIN)
-#define   RES_EVENT_2_GPIO                 GPIOB
-#define   RES_EVENT_2_PIN                  14 //pcb marking 22
-#define   RES_EVENT_2_PIN_MASK             (1 << RES_EVENT_2_PIN)
-//#define   RES_EVENT_16BIT                  0
-//#define   RES_EVENT_24BIT                  (1 << RES_EVENT_PIN)
+#define   RES_EVENT_GPIO                   GPIOB
+#define   RES_EVENT_PIN                    5 //pcb marking 3
+#define   RES_EVENT_16BIT                  0
+#define   RES_EVENT_24BIT                  (1 << RES_EVENT_PIN)
 
 #define   EXT_SYNC_GPIO                    GPIOC
 #define   EXT_SYNC_PIN                     9 //pcb marking EXT CLK
@@ -104,21 +85,6 @@
 
 #define   LED_GPIO                         GPIOC
 #define   LED_PIN                          8
-
-#define   BCLK_Fs_RATIO_GPIO               GPIOA
-#define   BCLK_Fs_RATIO_PIN                8 //pcb marking 13
-
-#define   TDM_LR_CLK_MODE_GPIO             SAI_SLAVE_SD_GPIO
-#define   TDM_LR_CLK_MODE_PIN              SAI_SLAVE_SD_PIN //I2S port2 DATA pin
-
-#define   BCLK_POLARITY_GPIO               GPIOB
-#define   BCLK_POLARITY_PIN                5 //pcb marking 3
-
-#define   HW_VOL_CTRL_GPIO                 GPIOC
-#define   HW_VOL_CTRL_PIN                  4 //pcb marking 36
-
-#define   DAC_OUT_GPIO                     GPIOA
-#define   DAC_OUT_PIN                      4 //pcb marking 34
 
 #define   AUDIO_CONFIG_1_PIN               CONFIG_1_PIN
 #define   AUDIO_CONFIG_2_PIN               CONFIG_2_PIN
@@ -142,8 +108,8 @@
 #define   I2C_INTERFACE                    0
 #define   SPI_INTERFACE                    1
 
-#define   FIRMWARE_VERSION_BYTE_1          0x01
-#define   FIRMWARE_VERSION_BYTE_2          0x06
+#define   FIRMWARE_VERSION_BYTE_1          0x00
+#define   FIRMWARE_VERSION_BYTE_2          0x01
 #define   FIRMWARE_VERSION_BYTE_3          0x00
 #define   FIRMWARE_VERSION_BYTE_4          0x00
 
@@ -202,7 +168,6 @@ enum USBModes
   USB_HID_MODE,
   USB_SOUND_CARD_MODE,
 };
-
 
 
 

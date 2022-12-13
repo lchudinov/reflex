@@ -46,9 +46,7 @@
 #define USB_AUDIO_CONFIG_PLAY_RES_BYTE               3//2//3 /* 3 bytes */   
 /* definition of the list of frequencies */
 #define USB_AUDIO_CONFIG_PLAY_USE_FREQ_192_K          1 /* to set by user:  1 : to use , 0 to not support*/
-#define USB_AUDIO_CONFIG_PLAY_USE_FREQ_176_4_K        1
 #define USB_AUDIO_CONFIG_PLAY_USE_FREQ_96_K           1 /* to set by user:  1 : to use , 0 to not support*/
-#define USB_AUDIO_CONFIG_PLAY_USE_FREQ_88_2_K         1 /* to set by user:  1 : to use , 0 to not support*/
 #define USB_AUDIO_CONFIG_PLAY_USE_FREQ_48_K           1 /* to set by user:  1 : to use , 0 to not support*/
 #define USB_AUDIO_CONFIG_PLAY_USE_FREQ_44_1_K         1 /* to set by user:  1 : to use , 0 to not support*/
 #define USB_AUDIO_CONFIG_PLAY_USE_FREQ_32_K           0 /* to set by user:  1 : to use , 0 to not support*/

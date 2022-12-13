@@ -2160,7 +2160,10 @@
             <name>$PROJ_DIR$\User\Src\ConfigurationMode.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\User\Src\DAC.c</name>
+            <name>$PROJ_DIR$\User\Src\Delay.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\User\Src\DSP.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\User\Src\Events.c</name>

@@ -347,10 +347,7 @@ static int8_t  USB_AudioPlaybackSetAudioStreamingInterfaceAlternateSetting( uint
   {    
     if( play_session->alternate  ==  0)
     {
-      uint8_t ActiveAudioConf = GetAudioConfiguration();
-      
-      if ((ActiveAudioConf != AUDIO_CONFIG_2_0_STEREO_32_BIT)
-       && (ActiveAudioConf != (AUDIO_CONFIG_2_0_STEREO_32_BIT + AUDIO_CONFIG_TDM_START_INDEX)))
+      if (GetAudioConfiguration() != AUDIO_CONFIG_2_0_STEREO_32_BIT)
       {
         switch(alternate)
         {

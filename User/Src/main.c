@@ -1,21 +1,9 @@
 /*
 ********************************************************************************
-* This file is a part of firmware for Reflex module
-* (USB_I2S_PRIME_SUPER modification)
-*
-* Copyright (c) 2019 - 2021 ChipDip. <https://www.chipdip.ru>
+* COPYRIGHT(c) ЗАО «ЧИП и ДИП», 2019, 2020
 * 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License. 
+* Программное обеспечение предоставляется на условиях «как есть» (as is).
+* При распространении указание автора обязательно.
 ********************************************************************************
 */
 
@@ -79,16 +67,15 @@ void USB_I2S_Init(void)
     
   CONFIG_GPIO->PUPDR |= (1 << (2 * AUDIO_CONFIG_1_PIN)) | (1 << (2 * AUDIO_CONFIG_2_PIN)) | \
                         (1 << (2 * AUDIO_CONFIG_3_PIN)) | (1 << (2 * TDM_MODE_PIN)) | \
-                        (1 << (2 * SYNC_MODE_PIN_1)) | (1 << (2 * SYNC_MODE_PIN_2)) | \
-                        (1 << (2 * HW_VOL_CTRL_PIN));
+                        (1 << (2 * SYNC_MODE_PIN_1)) | (1 << (2 * SYNC_MODE_PIN_2));
   
-  BCLK_Fs_RATIO_GPIO->PUPDR |= 1 << (2 * BCLK_Fs_RATIO_PIN);
-  
-  CONFIG_MODE_GPIO->PUPDR |= (1 << (2 * CONFIG_MODE_PIN)) | (1 << (2 * BCLK_POLARITY_PIN));
+  CONFIG_MODE_GPIO->PUPDR |= 1 << (2 * CONFIG_MODE_PIN);
   while((CONFIG_MODE_GPIO->PUPDR & (1 << (2 * CONFIG_MODE_PIN))) != (1 << (2 * CONFIG_MODE_PIN)));
   
   I2C_Init();
   
+  uint8_t MemoryDetected = Memory_IsReady();
+    
   uint8_t USBMode = (CONFIG_MODE_GPIO->IDR & (1 << CONFIG_MODE_PIN)) >> CONFIG_MODE_PIN;
   if (USBMode == USB_SOUND_CARD_MODE)
   {
@@ -98,15 +85,13 @@ void USB_I2S_Init(void)
   }
   else
   {
+    if ((MEMORY_ERASE_GPIO->IDR & (1 << MEMORY_ERASE_PIN)) != (1 << MEMORY_ERASE_PIN))
+      Memory_EraseConfig();
+    
     Application = ConfigurationApplication;
     
-    if (Memory_IsReady() == I2C_DEVICE_READY)
-    {
-      if ((MEMORY_ERASE_GPIO->IDR & (1 << MEMORY_ERASE_PIN)) != (1 << MEMORY_ERASE_PIN))
-        Memory_EraseConfig();
-      
+    if (MemoryDetected == I2C_DEVICE_READY)
       USBDevice_SetStatus(USB_PORT_MEMORY_DETECTED);
-    }
   }
   
   USBDevice_Init(USBMode);

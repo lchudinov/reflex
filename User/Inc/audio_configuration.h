@@ -1,21 +1,9 @@
 /*
 ********************************************************************************
-* This file is a part of firmware for Reflex module
-* (USB_I2S_PRIME_SUPER modification)
-*
-* Copyright (c) 2019 - 2021 ChipDip. <https://www.chipdip.ru>
+* COPYRIGHT(c) ЗАО «ЧИП и ДИП», 2019, 2020
 * 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License. 
+* Программное обеспечение предоставляется на условиях «как есть» (as is).
+* При распространении указание автора обязательно.
 ********************************************************************************
 */
 
@@ -51,9 +39,9 @@
 
 #define   CONFIG_2_0_STEREO_CHANNEL_COUNT        2
 #define   CONFIG_2_0_STEREO_CHANNEL_MAP          0x03
-#define   CONFIG_2_0_STEREO_16_BIT_FREQ_COUNT    6
-#define   CONFIG_2_0_STEREO_24_BIT_FREQ_COUNT    4
-#define   CONFIG_2_0_STEREO_32_BIT_FREQ_COUNT    2//1
+#define   CONFIG_2_0_STEREO_16_BIT_FREQ_COUNT    4
+#define   CONFIG_2_0_STEREO_24_BIT_FREQ_COUNT    3
+#define   CONFIG_2_0_STEREO_32_BIT_FREQ_COUNT    1
 #define   CONFIG_2_0_STEREO_16_BIT_MAX_PACKET    ((192 + 2) * CONFIG_2_0_STEREO_CHANNEL_COUNT * CONFIG_RES_BYTE_16)
 #define   CONFIG_2_0_STEREO_24_BIT_MAX_PACKET    ((96 + 2) * CONFIG_2_0_STEREO_CHANNEL_COUNT * CONFIG_RES_BYTE_24)
 #define   CONFIG_2_0_STEREO_32_BIT_MAX_PACKET    ((96 + 2) * CONFIG_2_0_STEREO_CHANNEL_COUNT * CONFIG_RES_BYTE_32)
@@ -63,14 +51,14 @@
 
 #define   CONFIG_3_1_CHANNEL_COUNT               4
 #define   CONFIG_3_1_CHANNEL_MAP                 0x0F
-#define   CONFIG_3_1_16_BIT_FREQ_COUNT           4
+#define   CONFIG_3_1_16_BIT_FREQ_COUNT           3
 #define   CONFIG_3_1_24_BIT_FREQ_COUNT           2
 #define   CONFIG_3_1_16_BIT_MAX_PACKET           ((96 + 2) * CONFIG_3_1_CHANNEL_COUNT * CONFIG_RES_BYTE_16)
 #define   CONFIG_3_1_24_BIT_MAX_PACKET           ((48 + 2) * CONFIG_3_1_CHANNEL_COUNT * CONFIG_RES_BYTE_24)
 
 #define   CONFIG_4_0_QUADRO_CHANNEL_COUNT        4
 #define   CONFIG_4_0_QUADRO_CHANNEL_MAP          0x33
-#define   CONFIG_4_0_QUADRO_16_BIT_FREQ_COUNT    4
+#define   CONFIG_4_0_QUADRO_16_BIT_FREQ_COUNT    3
 #define   CONFIG_4_0_QUADRO_24_BIT_FREQ_COUNT    2
 #define   CONFIG_4_0_QUADRO_16_BIT_MAX_PACKET    ((96 + 2) * CONFIG_4_0_QUADRO_CHANNEL_COUNT * CONFIG_RES_BYTE_16)
 #define   CONFIG_4_0_QUADRO_24_BIT_MAX_PACKET    ((48 + 2) * CONFIG_4_0_QUADRO_CHANNEL_COUNT * CONFIG_RES_BYTE_24)
@@ -99,8 +87,6 @@
 #define   AUDIO_CONFIG_3_1_TDM                   (AUDIO_CONFIG_3_1 + AUDIO_CONFIG_TDM_START_INDEX)
 #define   AUDIO_CONFIG_4_0_QUADRO_TDM            (AUDIO_CONFIG_4_0_QUADRO + AUDIO_CONFIG_TDM_START_INDEX)
 #define   AUDIO_CONFIG_7_1_TDM                   (AUDIO_CONFIG_7_1 + AUDIO_CONFIG_TDM_START_INDEX)
-#define   AUDIO_CONFIG_2_0_SPDIF                 (AUDIO_CONFIG_7_1_TDM + 1)
-#define   AUDIO_CONFIG_HWV_START_INDEX           (AUDIO_CONFIG_2_0_SPDIF + 1)
 
 #define   CHANNELS_PREPARE_DATA_BUF_SIZE         ((48 + 2) * CONFIG_7_1_SURROUND_CHANNEL_COUNT * (CONFIG_RES_BYTE_24 + 1))//1024
 
@@ -131,8 +117,6 @@ void Play_SAIMaster(uint16_t *Data, uint16_t Size, uint8_t ResByte);
 
 void Play_SAIMasterAndSlave(uint16_t *Data, uint16_t Size, uint8_t ResByte);
 
-void PrepareSPDIF_24bitData(uint8_t* AudioData, uint16_t Size, uint8_t ResInBytes);
-
 void PrepareMultiChannelData(uint8_t* AudioData, uint16_t Size, uint8_t ResInBytes);
 
 void AudioChangeFrequency(uint32_t AudioFrequency);
@@ -150,8 +134,6 @@ void AudioOutInit(uint32_t AudioFrequency, uint8_t AudioResolution);
 void PlayDescriptionInit(AUDIO_Description_t *Description);
 
 uint8_t GetAudioConfiguration(void);
-
-uint8_t GetVolumeFeature(void);
 
 void MakeSerialNumber(uint32_t *Buffer);
 

@@ -28,10 +28,8 @@
 /* Exported constants --------------------------------------------------------*/
 /* list of frequencies*/
 #define USB_AUDIO_CONFIG_FREQ_192_K   192000 /* to use only with class audio 2.0 */
-#define USB_AUDIO_CONFIG_FREQ_176_4_K   176400
 #define USB_AUDIO_CONFIG_FREQ_96_K   96000
-#define USB_AUDIO_CONFIG_FREQ_88_2_K 88200
-#define USB_AUDIO_CONFIG_FREQ_48_K   48000
+#define USB_AUDIO_CONFIG_FREQ_48_K   48000 
 #define USB_AUDIO_CONFIG_FREQ_44_1_K 44100
 #define USB_AUDIO_CONFIG_FREQ_32_K   32000
 #define USB_AUDIO_CONFIG_FREQ_16_K   16000

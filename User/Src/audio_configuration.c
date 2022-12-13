@@ -1,21 +1,9 @@
 /*
 ********************************************************************************
-* This file is a part of firmware for Reflex module
-* (USB_I2S_PRIME_SUPER modification)
-*
-* Copyright (c) 2019 - 2021 ChipDip. <https://www.chipdip.ru>
+* COPYRIGHT(c) ЗАО «ЧИП и ДИП», 2019, 2020
 * 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License. 
+* Программное обеспечение предоставляется на условиях «как есть» (as is).
+* При распространении указание автора обязательно.
 ********************************************************************************
 */
 
@@ -27,12 +15,10 @@
 #include "I2C.h"
 #include "I2C_Memory.h"
 #include "Events.h"
-#include "DAC.h"
 
 
 
-static uint8_t AudioConfiguration = 0; // was 0xFF
-static uint8_t VolumeFeature = 0;
+static uint8_t AudioConfiguration = 0xFF;//0;
 static uint8_t SyncMode = 0;
 static uint8_t SAICountUsed = 2;
 static uint8_t ChannelsPairs = 2;
@@ -49,12 +35,18 @@ static USBDSettings USBInfo =
 
 void SetAudioConfigDependedFuncs(AUDIO_SpeakerNode_t *speaker)
 {
-  switch(AudioConfiguration)
+  uint8_t AudioConf = AudioConfiguration;
+  
+  if (AudioConf >= AUDIO_CONFIG_TDM_START_INDEX)
+    AudioConf -= AUDIO_CONFIG_TDM_START_INDEX;
+  
+  switch(AudioConf)
   {
-    
-    case AUDIO_CONFIG_2_0_SPDIF:
+    case AUDIO_CONFIG_2_0_STEREO_32_BIT:
+    case AUDIO_CONFIG_2_0_STEREO:
+    default:
       speaker->SpeakerPlay = Play_SAIMaster;
-      speaker->SpeakerPrepareData = PrepareSPDIF_24bitData;
+      speaker->SpeakerPrepareData = 0;
     break;
     
     case AUDIO_CONFIG_3_1:
@@ -63,11 +55,12 @@ void SetAudioConfigDependedFuncs(AUDIO_SpeakerNode_t *speaker)
       speaker->SpeakerPlay = Play_SAIMasterAndSlave;
       speaker->SpeakerPrepareData = PrepareMultiChannelData;
     break;
+  }
   
-    default:
-      speaker->SpeakerPlay = Play_SAIMaster;
-      speaker->SpeakerPrepareData = 0;
-    break;
+  if (AudioConfiguration >= AUDIO_CONFIG_TDM_START_INDEX)
+  {
+    speaker->SpeakerPlay = Play_SAIMaster;
+    speaker->SpeakerPrepareData = 0;
   }
 }
 //------------------------------------------------------------------------------
@@ -94,12 +87,6 @@ void Play_SAIMasterAndSlave(uint16_t *Data, uint16_t Size, uint8_t ResByte)
   
   SAI_DMAEnable(SAI_SLAVE);
   SAI_DMAEnable(SAI_MASTER);
-}
-//------------------------------------------------------------------------------
-void PrepareSPDIF_24bitData(uint8_t* AudioData, uint16_t Size, uint8_t ResInBytes)
-{
-  for (uint16_t i = 0; i < Size; i += 4)
-    (*(uint32_t *)((uint32_t)&AudioData[i])) >>= 8;
 }
 //------------------------------------------------------------------------------
 void PrepareMultiChannelData(uint8_t* AudioData, uint16_t Size, uint8_t ResInBytes)
@@ -178,8 +165,7 @@ void AudioChangeResolution(uint8_t AudioResolution)
       SAI_Enable(SAI_SLAVE);
     }
   }
-  else if (AudioConfiguration == AUDIO_CONFIG_2_0_SPDIF)
-    SAI_DMAChangeDataSize(SAI_MASTER_DMA_STREAM, AudioResolution);
+  
   else
   {
     SAI_Init_TDM(SAI_MASTER, AudioResolution, 2 * ChannelsPairs);
@@ -205,7 +191,7 @@ uint16_t GetRemainingTxSize(void)
 {
   uint16_t TxSize = SAI_GetRemainingTxSize();
   
-  if ((AudioConfiguration >= AUDIO_CONFIG_TDM_START_INDEX) && (AudioConfiguration != AUDIO_CONFIG_2_0_SPDIF))
+  if (AudioConfiguration >= AUDIO_CONFIG_TDM_START_INDEX)
     TxSize /= ChannelsPairs;
   
   return TxSize;
@@ -215,7 +201,7 @@ uint16_t GetLastTxSize(void)
 {
   uint16_t TxSize = SAI_GetLastTransferSize();
   
-  if ((AudioConfiguration >= AUDIO_CONFIG_TDM_START_INDEX) && (AudioConfiguration != AUDIO_CONFIG_2_0_SPDIF))
+  if (AudioConfiguration >= AUDIO_CONFIG_TDM_START_INDEX)
     TxSize /= ChannelsPairs;
   
   return TxSize;
@@ -231,10 +217,9 @@ void AudioOutInit(uint32_t AudioFrequency, uint8_t AudioResolution)
   SAI_MasterGPIOInit();
   SAI_MasterDMAInit(AudioResolution);
   
-  if ((AudioConfiguration < AUDIO_CONFIG_TDM_START_INDEX)
-   || (AudioConfiguration == AUDIO_CONFIG_2_0_SPDIF))
+  if (AudioConfiguration < AUDIO_CONFIG_TDM_START_INDEX)
   {
-    SAI_MasterInit(AudioResolution, ChannelsPairs);
+    SAI_MasterInit_I2S(AudioResolution);
   
     if (SAICountUsed == 2)
     {
@@ -245,7 +230,7 @@ void AudioOutInit(uint32_t AudioFrequency, uint8_t AudioResolution)
     }
   }
   else
-    SAI_MasterInit(AudioResolution, 2 * ChannelsPairs);
+    SAI_MasterInit_TDM(AudioResolution, 2 * ChannelsPairs);
   
   if (SyncMode == MASTER_INT_SYNC)
     SAI_ChangeFrequency(AudioFrequency);
@@ -262,9 +247,7 @@ void PlayDescriptionInit(AUDIO_Description_t *Description)
 {
   uint8_t AudioConf = AudioConfiguration;
   
-  if (AudioConf == AUDIO_CONFIG_2_0_SPDIF)
-    AudioConf = AUDIO_CONFIG_2_0_STEREO;
-  else if (AudioConf >= AUDIO_CONFIG_TDM_START_INDEX)
+  if (AudioConf >= AUDIO_CONFIG_TDM_START_INDEX)
     AudioConf -= AUDIO_CONFIG_TDM_START_INDEX;
   
   switch(AudioConf)
@@ -312,20 +295,10 @@ uint8_t GetAudioConfiguration(void)
   return AudioConfiguration;
 }
 //------------------------------------------------------------------------------
-uint8_t GetVolumeFeature(void)
-{
-  return VolumeFeature;
-}
-//------------------------------------------------------------------------------
 void MakeSerialNumber(uint32_t *Buffer)
 {
   Buffer[0] = (*(uint32_t*)DEVICE_ID1) + (*(uint32_t*)DEVICE_ID3);
-  Buffer[1] = (((*(uint32_t*)DEVICE_ID2) >> 16) + AudioConfiguration);
-  
-  if (VolumeFeature != 0)
-    Buffer[1] += AUDIO_CONFIG_HWV_START_INDEX;
-  
-  Buffer[1] <<= 16;
+  Buffer[1] = (((*(uint32_t*)DEVICE_ID2) >> 16) + AudioConfiguration) << 16;
 }
 //------------------------------------------------------------------------------
 uint8_t *GetUSB_IDs(void)
@@ -345,15 +318,8 @@ uint8_t *GetAudioDevName(void)
 //------------------------------------------------------------------------------
 void AudioConfig_Init(void)
 {
-  SAISettings Settings;
-  Settings.BclkFsRatio = BCLK_Fs_RES_DEPENDENT;
-  Settings.BclkPol = CKSTR_1_FALLING;
-  Settings.TdmLrMode = TDM_LR_PULSE;
-  Settings.Format = SAI_I2S;
-  
-  // why would we need to read CONFIG_GPIO->IDR
   AudioConfiguration = CONFIG_GPIO->IDR & AUDIO_CONFIG_MASK;
-      
+    
   switch(AudioConfiguration)
   {
     case (AUDIO_CONFIG_1_MASK | AUDIO_CONFIG_3_MASK):
@@ -383,24 +349,12 @@ void AudioConfig_Init(void)
       AudioConfiguration = AUDIO_CONFIG_7_1;
       ChannelsPairs = 4;
     break;
-    
-    case 0:
-      AudioConfiguration = AUDIO_CONFIG_2_0_SPDIF;
-      SAICountUsed = 1;
-      ChannelsPairs = 1;
-      Settings.Format = SAI_SPDIF;
-    break;    
   }
   
-  if ((AudioConfiguration != AUDIO_CONFIG_2_0_SPDIF)
-  && ((CONFIG_GPIO->IDR & (1 << TDM_MODE_PIN)) != (1 << TDM_MODE_PIN)))
+  if ((CONFIG_GPIO->IDR & (1 << TDM_MODE_PIN)) != (1 << TDM_MODE_PIN))
   {
     AudioConfiguration += AUDIO_CONFIG_TDM_START_INDEX;
     SAICountUsed = 1;
-    Settings.Format = SAI_TDM;
-    
-    TDM_LR_CLK_MODE_GPIO->PUPDR |= (1 << (2 * TDM_LR_CLK_MODE_PIN));
-    while((TDM_LR_CLK_MODE_GPIO->PUPDR & (1 << (2 * TDM_LR_CLK_MODE_PIN))) != (1 << (2 * TDM_LR_CLK_MODE_PIN)));
   }
   
   uint16_t SyncConfig = CONFIG_GPIO->IDR & SYNC_MODE_MASK;
@@ -419,27 +373,6 @@ void AudioConfig_Init(void)
       SyncMode = SLAVE_SYNC;
     break;
   }
-  
-  if ((BCLK_Fs_RATIO_GPIO->IDR & (1 << BCLK_Fs_RATIO_PIN)) != (1 << BCLK_Fs_RATIO_PIN))
-    Settings.BclkFsRatio = BCLK_Fs_FIXED;
-  
-  if ((BCLK_POLARITY_GPIO->IDR & (1 << BCLK_POLARITY_PIN)) != (1 << BCLK_POLARITY_PIN))
-    Settings.BclkPol = CKSTR_0_RISING;
-  
-  if ((AudioConfiguration != AUDIO_CONFIG_2_0_SPDIF)
-  && ((CONFIG_GPIO->IDR & (1 << TDM_MODE_PIN)) != (1 << TDM_MODE_PIN)))
-  {
-    if ((TDM_LR_CLK_MODE_GPIO->IDR & (1 << TDM_LR_CLK_MODE_PIN)) != (1 << TDM_LR_CLK_MODE_PIN))
-      Settings.TdmLrMode = TDM_LR_CLOCK;
-  }
-  
-  if ((HW_VOL_CTRL_GPIO->IDR & (1 << HW_VOL_CTRL_PIN)) != (1 << HW_VOL_CTRL_PIN))
-  {
-    VolumeFeature = USBD_AUDIO_CONTROL_FEATURE_UNIT_VOLUME;
-    DAC_Init();
-  }
-  
-  SAI_InitSettings(&Settings);
   
   BootConfig();
 }
@@ -471,24 +404,21 @@ void BootControllerConfig(void)
   for (uint8_t i = 0 ; i < (CONTROLLER_VID_SIZE + CONTROLLER_PID_SIZE); i++)
     USBInfo.IDs[i] = MemTransfer.Data[i];
   
+  //USBInfo.ManufactSize = Transfer.Data[CONTROLLER_MANUFACT_SIZE_OFFSET - CONTROLLER_VID_OFFSET];
   uint8_t StringSize = MemTransfer.Data[CONTROLLER_MANUFACT_SIZE_OFFSET - CONTROLLER_VID_OFFSET];
   
   for (uint8_t i = 0 ; i < StringSize; i++)
     USBInfo.ManufactString[i] = MemTransfer.Data[CONTROLLER_MANUFACT_OFFSET - CONTROLLER_VID_OFFSET + i];
   
+  //USBInfo.ManufactString[StringSize] = '\0';
+  
+  //AudioConfiguration = 0;
   MemTransfer.Address = ConfigAddress + FIRST_AUDIO_NAME_MAP_OFFSET + AudioConfiguration * AUDIO_NAME_MAP_SIZE;
   MemTransfer.Size = AUDIO_NAME_MAP_SIZE;
   Memory_Read(&MemTransfer);
   
   for (uint8_t i = 0 ; i < MemTransfer.Data[AUDIO_NAME_SIZE_OFFSET]; i++)
-  {
     USBInfo.DevNameString[i] = MemTransfer.Data[AUDIO_NAME_OFFSET + i];
-    if ((i == 0) && (USBInfo.DevNameString[0] == 0xFF))
-    {
-      USBInfo.DevNameString[0] = 0x00;
-      break;
-    }
-  }
 }
 
 
